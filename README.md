@@ -62,6 +62,12 @@ Web Scraper is a library to build APIs by scraping static sites and use data as 
 
     Think you could be CIO? Jim Barton is a savvy manager but an IT newbie when he's promoted into the hot seat as chief information officer in , a novel by HBS professors  and  and coauthor . Can Barton navigate his strange new world quickly enough? Q&A with the authors, and book excerpt.
 
+### TODO
+
+* write documentation in code
+* add overview in readme
+* write tests
+
 **Author (Speransky Danil):**
 [Personal Page](http://dsperansky.info) |
 [LinkedIn](http://ru.linkedin.com/in/speranskydanil/en) |
