@@ -1,4 +1,4 @@
-require './lib/web_scraper'
+require 'web_scraper'
 
 class Article < WebScraper
   resource 'http://hbswk.hbs.edu/topics/it.html'
