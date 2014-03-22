@@ -64,6 +64,9 @@ class Article &lt; WebScraper
   key :title
 end
 
+puts "#{Article.count} articles were found"
+puts
+
 articles = Article.all
 
 articles.each do |article|
@@ -80,6 +83,10 @@ articles.each do |article|
   puts article.description
   puts
 end
+
+article =  Article.find('Tech Investment the Wise Way')
+
+puts article.description
 </code></pre>
 
 <p><strong>Output</strong></p>
@@ -99,6 +106,85 @@ The IT Leader’s Hero Quest
 ----------------------------
 
 Think you could be CIO? Jim Barton is a savvy manager but an IT newbie when he's promoted into the hot seat as chief information officer in , a novel by HBS professors  and  and coauthor . Can Barton navigate his strange new world quickly enough? Q&amp;A with the authors, and book excerpt.
+</code></pre>
+
+<h3>
+<a name="reference" class="anchor" href="#reference"><span class="octicon octicon-link"></span></a>Reference</h3>
+
+<p><strong>WebScraper.all</strong><br><em>Loads html page, detects appropriate blocks,<br>
+wraps them in objects.<br>
+The result will be cached.</em></p>
+
+<pre><code>articles = Article.all
+</code></pre>
+
+<p><strong>WebScraper.count</strong><br><em>Returns number of objects found.</em></p>
+
+<pre><code>puts "#{Article.count} articles were found"
+</code></pre>
+
+<p><strong>WebScraper.reset</strong><br><em>Resets cache of the html data.</em></p>
+
+<pre><code>Article.reset
+</code></pre>
+
+<p><strong>WebScraper.find(key)</strong><br><em>Finds first object with required key.</em></p>
+
+<pre><code>article = Article.find('Tech Investment the Wise Way')
+</code></pre>
+
+<p><strong>WebScraper.resource(_resource)</strong><br><em>Defines resource -- url of the html page.</em></p>
+
+<pre><code>class Article &lt; WebScraper
+  ...
+  resource 'http://hbswk.hbs.edu/topics/it.html'
+  ...
+end
+</code></pre>
+
+<p><strong>WebScraper.base(_base)</strong><br><em>Defines base -- selector which determines blocks of content.<br>
+You can use css or xpath selectors.</em></p>
+
+<pre><code>class Article &lt; WebScraper
+  ...
+  base css: '.tile-medium'
+  ...
+end
+</code></pre>
+
+<p><strong>WebScraper.property(*args)</strong><br><em>Defines property -- name (and type optionally) and selector.<br>
+You can use css or xpath selectors.<br>
+Types determine returning values.<br>
+Available types (default is string): string, integer, float, node.<br>
+The node option means nokogiri node.</em></p>
+
+<pre><code>class Article &lt; WebScraper
+  ...
+  property :title,           xpath: './/h4/a/text()'
+  property  views: :integer, xpath: './/h4/span/text()'
+  ...
+end
+</code></pre>
+
+<p><strong>WebScraper.key(_key)</strong><br><em>Defines key -- property which will be used in find method.</em></p>
+
+<pre><code>class Article &lt; WebScraper
+  ...
+  key :title
+  ...
+end
+</code></pre>
+
+<p><strong>WebScraper#css(*args)</strong><br><em>Allows you to use nokogiri css method directly on your object.<br>
+It proxies it to nokogiri node.</em></p>
+
+<p><strong>WebScraper#xpath(*args)</strong><br><em>Allows you to use nokogiri xpath method directly on your object.<br>
+It proxies it to nokogiri node.</em></p>
+
+<p><strong>WebScraper#property</strong><br><strong>WebScraper#method_missing(name, *args, &amp;block)</strong><br><em>Returns appropriate value for property if found.<br>
+Converts it to the defined type.</em></p>
+
+<pre><code>puts article.description
 </code></pre>
 
 <p><strong>Author (Speransky Danil):</strong>
