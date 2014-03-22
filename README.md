@@ -75,22 +75,27 @@ Web Scraper is a library to build APIs by scraping static sites and use data as 
 *Loads html page, detects appropriate blocks,  
 wraps them in objects.  
 The result will be cached.*
+
     articles = Article.all
 
 **WebScraper.count**  
 *Returns number of objects found.*
+
     puts "#{Article.count} articles were found"
 
 **WebScraper.reset**  
 *Resets cache of the html data.*
+
     Article.reset
 
 **WebScraper.find(key)**  
 *Finds first object with required key.*
+
     article = Article.find('Tech Investment the Wise Way')
 
 **WebScraper.resource(_resource)**  
 *Defines resource -- url of the html page.*
+
     class Article < WebScraper
       ...
       resource 'http://hbswk.hbs.edu/topics/it.html'
@@ -100,6 +105,7 @@ The result will be cached.*
 **WebScraper.base(_base)**  
 *Defines base -- selector which determines blocks of content.  
 You can use css or xpath selectors.*
+
     class Article < WebScraper
       ...
       base css: '.tile-medium'
@@ -112,6 +118,7 @@ You can use css or xpath selectors.
 Types determine returning values.  
 Available types (default is string): string, integer, float, node.  
 The node option means nokogiri node.*
+
     class Article < WebScraper
       ...
       property :title,           xpath: './/h4/a/text()'
@@ -121,6 +128,7 @@ The node option means nokogiri node.*
 
 **WebScraper.key(_key)**  
 *Defines key -- property which will be used in find method.*
+
     class Article < WebScraper
       ...
       key :title
@@ -139,6 +147,7 @@ It proxies it to nokogiri node.*
 **WebScraper#method_missing(name, *args, &block)**  
 *Returns appropriate value for property if found.  
 Converts it to the defined type.*
+
     puts article.description
 
 **Author (Speransky Danil):**
