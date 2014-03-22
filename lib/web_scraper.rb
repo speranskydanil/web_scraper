@@ -1,25 +1,74 @@
 require 'open-uri'
 require 'nokogiri'
 
+##
+# WebScraper allows you to describe html structure declaratively,
+# get appropriate blocks, and work with them as with ruby objects.
+# @example
+#  class Article < WebScraper
+#    resource 'http://hbswk.hbs.edu/topics/it.html'
+#
+#    base css: '.tile-medium'
+#
+#    property :title,       xpath: './/h4/a/text()'
+#    property :date,        xpath: './/li[1]/text()'
+#    property :category,    xpath: './/li[2]/a/text()'
+#    property :description, xpath: './/p/text()'
+#
+#    key :title
+#  end
+#
+#  puts "#{Article.count} articles were found"
+#  puts
+#
+#  articles = Article.all
+#
+#  articles.each do |article|
+#    header = article.title
+#    puts header
+#    puts '=' * header.length
+#    puts
+#
+#    subheader = "#{article.date} #{article.category}"
+#    puts subheader
+#    puts '-' * subheader.length
+#    puts
+#
+#    puts article.description
+#    puts
+#  end
+#
+#  article =  Article.find('Tech Investment the Wise Way')
+#
+#  puts article.description
 class WebScraper
+  ##
+  # The error raises when a user tries to call a class method
+  # when not all required attributes were defined.
   class ConfigurationError < RuntimeError
     def message
       'resource, base, properties and key should be defined'
     end
   end
 
+  ##
+  # The error raises when a user tries to define resource improperly.
   class ResourceDefentitionError < RuntimeError
     def message
       'resource should be a string'
     end
   end
 
+  ##
+  # The error raises when a user tries to define base improperly.
   class BaseDefentitionError < RuntimeError
     def message
       'base should be a selector (:css|:xpath => String)'
     end
   end
 
+  ##
+  # The error raises when a user tries to define propery improperly.
   class PropertyDefentitionError < RuntimeError
     def message
       'property is a name (with type optionally) ' +
@@ -27,6 +76,8 @@ class WebScraper
     end
   end
 
+  ##
+  # The error raises when a user tries to define key improperly.
   class KeyDefentitionError < RuntimeError
     def message
       'key should be a name of a defined property'
@@ -34,6 +85,12 @@ class WebScraper
   end
 
   class << self
+    ##
+    # Loads html page, detects appropriate blocks,
+    # wraps them in objects.
+    # The result will be cached.
+    # @example
+    #  articles = Article.all
     def all
       raise ConfigurationError unless valid?
 
@@ -41,18 +98,38 @@ class WebScraper
                .send(*_base).map { |node| new(node) }
     end
 
+    ##
+    # Returns number of objects found.
+    # @example
+    #  puts "#{Article.count} articles were found"
     def count
       all.size
     end
 
-    def expire
+    ##
+    # Resets cache of the html data.
+    # @example
+    #  Article.reset
+    def reset
       @all = nil
     end
 
+    ##
+    # Finds first object with required key.
+    # @example
+    #  article = Article.find('Tech Investment the Wise Way')
     def find(key)
       all.find { |e| e.send(_key) == key }
     end
 
+    ##
+    # Defines resource -- url of the html page.
+    # @example
+    #  class Article < WebScraper
+    #    ...
+    #    resource 'http://hbswk.hbs.edu/topics/it.html'
+    #    ...
+    #  end
     def resource(_resource)
       raise ResourceDefentitionError unless _resource.is_a? String
 
@@ -61,6 +138,15 @@ class WebScraper
 
     attr_reader :_resource
 
+    ##
+    # Defines base -- selector which determines blocks of content.
+    # You can use css or xpath selectors.
+    # @example
+    #  class Article < WebScraper
+    #    ...
+    #    base css: '.tile-medium'
+    #    ...
+    #  end
     def base(_base)
       raise BaseDefentitionError unless valid_selector? _base
 
@@ -69,6 +155,19 @@ class WebScraper
 
     attr_reader :_base
 
+    ##
+    # Defines property -- name (and type optionally) and selector.
+    # You can use css or xpath selectors.
+    # Types determine returning values.
+    # Available types (default is string): string, integer, float, node.
+    # The node option means nokogiri node.
+    # @example
+    #  class Article < WebScraper
+    #    ...
+    #    property :title,           xpath: './/h4/a/text()'
+    #    property  views: :integer, xpath: './/h4/span/text()'
+    #    ...
+    #  end
     def property(*args)
       @properties ||= {}
 
@@ -101,6 +200,14 @@ class WebScraper
 
     attr_reader :properties
 
+    ##
+    # Defines key -- property which will be used in find method.
+    # @example
+    #  class Article < WebScraper
+    #    ...
+    #    key :title
+    #    ...
+    #  end
     def key(_key)
       raise KeyDefentitionError unless properties.keys.include? _key
 
@@ -109,10 +216,14 @@ class WebScraper
 
     attr_reader :_key
 
+    ##
+    # Checks if all attributes were set.
     def valid?
       _resource && _base && _key
     end
 
+    ##
+    # Checks if selector was defined correctly.
     def valid_selector?(selector)
       (selector.is_a? Hash) &&
       (selector.size == 1) &&
@@ -120,6 +231,8 @@ class WebScraper
       (selector.values.first.is_a? String)
     end
 
+    ##
+    # Checks if property information (i.e. name and type) were defined correctly.
     def valid_info?(info)
       (info.is_a? Hash) &&
       (info.size == 1) &&
@@ -130,20 +243,31 @@ class WebScraper
     private :new
   end
 
+  ##
+  # Sets nokogiri node. It's private method.
   def initialize(node)
     @node = node
   end
 
-  attr_reader :node
-
+  ##
+  # Allows you to use nokogiri css method directly on your object.
+  # It proxies it to nokogiri node.
   def css(*args)
-    node.css(*args)
+    @node.css(*args)
   end
 
+  ##
+  # Allows you to use nokogiri xpath method directly on your object.
+  # It proxies it to nokogiri node.
   def xpath(*args)
-    node.xpath(*args)
+    @node.xpath(*args)
   end
 
+  ##
+  # Returns appropriate value for property if found.
+  # Converts it to the defined type.
+  # @example
+  #  puts article.description
   def method_missing(name, *args, &block)
     if self.class.properties.key? name
       property = self.class.properties[name]
