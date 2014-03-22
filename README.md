@@ -69,6 +69,78 @@ Web Scraper is a library to build APIs by scraping static sites and use data as 
 
     Think you could be CIO? Jim Barton is a savvy manager but an IT newbie when he's promoted into the hot seat as chief information officer in , a novel by HBS professors  and  and coauthor . Can Barton navigate his strange new world quickly enough? Q&A with the authors, and book excerpt.
 
+### Reference
+
+**WebScraper.all**  
+*Loads html page, detects appropriate blocks,  
+wraps them in objects.  
+The result will be cached.*
+    articles = Article.all
+
+**WebScraper.count**  
+*Returns number of objects found.*
+    puts "#{Article.count} articles were found"
+
+**WebScraper.reset**  
+*Resets cache of the html data.*
+    Article.reset
+
+**WebScraper.find(key)**  
+*Finds first object with required key.*
+    article = Article.find('Tech Investment the Wise Way')
+
+**WebScraper.resource(_resource)**  
+*Defines resource -- url of the html page.*
+    class Article < WebScraper
+      ...
+      resource 'http://hbswk.hbs.edu/topics/it.html'
+      ...
+    end
+
+**WebScraper.base(_base)**  
+*Defines base -- selector which determines blocks of content.  
+You can use css or xpath selectors.*
+    class Article < WebScraper
+      ...
+      base css: '.tile-medium'
+      ...
+    end
+
+**WebScraper.property(*args)**  
+*Defines property -- name (and type optionally) and selector.  
+You can use css or xpath selectors.  
+Types determine returning values.  
+Available types (default is string): string, integer, float, node.  
+The node option means nokogiri node.*
+    class Article < WebScraper
+      ...
+      property :title,           xpath: './/h4/a/text()'
+      property  views: :integer, xpath: './/h4/span/text()'
+      ...
+    end
+
+**WebScraper.key(_key)**  
+*Defines key -- property which will be used in find method.*
+    class Article < WebScraper
+      ...
+      key :title
+      ...
+    end
+
+**WebScraper#css(*args)**  
+*Allows you to use nokogiri css method directly on your object.  
+It proxies it to nokogiri node.*
+
+**WebScraper#xpath(*args)**  
+*Allows you to use nokogiri xpath method directly on your object.  
+It proxies it to nokogiri node.*
+
+**WebScraper#property**  
+**WebScraper#method_missing(name, *args, &block)**  
+*Returns appropriate value for property if found.  
+Converts it to the defined type.*
+    puts article.description
+
 **Author (Speransky Danil):**
 [Personal Page](http://dsperansky.info) |
 [LinkedIn](http://ru.linkedin.com/in/speranskydanil/en) |
