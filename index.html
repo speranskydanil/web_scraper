@@ -37,45 +37,44 @@ require 'web_scraper'
 
 <p><strong>Example</strong></p>
 
-<pre><code>require 'web_scraper'
+<div class="highlight highlight-ruby"><pre><span class="pl-k">require</span> <span class="pl-s"><span class="pl-pds">'</span>web_scraper<span class="pl-pds">'</span></span>
 
-class Article &lt; WebScraper
-  resource 'http://hbswk.hbs.edu/topics/it.html'
+<span class="pl-k">class</span> <span class="pl-en">Article<span class="pl-e"> &lt; WebScraper</span></span>
+  resource <span class="pl-s"><span class="pl-pds">'</span>http://hbswk.hbs.edu/topics/it.html<span class="pl-pds">'</span></span>
 
-  base css: '.tile-medium'
+  base <span class="pl-c1">css:</span> <span class="pl-s"><span class="pl-pds">'</span>.tile-medium<span class="pl-pds">'</span></span>
 
-  property :title,       xpath: './/h4/a/text()'
-  property :date,        xpath: './/li[1]/text()'
-  property :category,    xpath: './/li[2]/a/text()'
-  property :description, xpath: './/p/text()'
+  property <span class="pl-c1">:title</span>,       <span class="pl-c1">xpath:</span> <span class="pl-s"><span class="pl-pds">'</span>.//h4/a/text()<span class="pl-pds">'</span></span>
+  property <span class="pl-c1">:date</span>,        <span class="pl-c1">xpath:</span> <span class="pl-s"><span class="pl-pds">'</span>.//li[1]/text()<span class="pl-pds">'</span></span>
+  property <span class="pl-c1">:category</span>,    <span class="pl-c1">xpath:</span> <span class="pl-s"><span class="pl-pds">'</span>.//li[2]/a/text()<span class="pl-pds">'</span></span>
+  property <span class="pl-c1">:description</span>, <span class="pl-c1">xpath:</span> <span class="pl-s"><span class="pl-pds">'</span>.//p/text()<span class="pl-pds">'</span></span>
 
-  key :title
-end
+  key <span class="pl-c1">:title</span>
+<span class="pl-k">end</span>
 
-puts "#{Article.count} articles were found"
+puts <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pse">#{</span><span class="pl-s1"><span class="pl-c1">Article</span>.count</span><span class="pl-pse"><span class="pl-s1">}</span></span> articles were found<span class="pl-pds">"</span></span>
 puts
 
-articles = Article.all
+articles <span class="pl-k">=</span> <span class="pl-c1">Article</span>.all
 
-articles.each do |article|
-  header = article.title
+articles.each <span class="pl-k">do </span>|<span class="pl-smi">article</span>|
+  header <span class="pl-k">=</span> article.title
   puts header
-  puts '=' * header.length
+  puts <span class="pl-s"><span class="pl-pds">'</span>=<span class="pl-pds">'</span></span> <span class="pl-k">*</span> header.length
   puts
 
-  subheader = "#{article.date} #{article.category}"
+  subheader <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pse">#{</span><span class="pl-s1">article.date</span><span class="pl-pse"><span class="pl-s1">}</span></span> <span class="pl-pse">#{</span><span class="pl-s1">article.category</span><span class="pl-pse"><span class="pl-s1">}</span></span><span class="pl-pds">"</span></span>
   puts subheader
-  puts '-' * subheader.length
+  puts <span class="pl-s"><span class="pl-pds">'</span>-<span class="pl-pds">'</span></span> <span class="pl-k">*</span> subheader.length
   puts
 
   puts article.description
   puts
-end
+<span class="pl-k">end</span>
 
-article =  Article.find('Tech Investment the Wise Way')
+article <span class="pl-k">=</span>  <span class="pl-c1">Article</span>.find(<span class="pl-s"><span class="pl-pds">'</span>Tech Investment the Wise Way<span class="pl-pds">'</span></span>)
 
-puts article.description
-</code></pre>
+puts article.description</pre></div>
 
 <p><strong>Output</strong></p>
 
