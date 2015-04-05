@@ -2,13 +2,13 @@
 
 Web Scraper is a library to build APIs by scraping static sites and use data as models.
 
-### Installation
+## Installation
 
     gem install web_scraper
 
     require 'web_scraper'
 
-### Usage
+## Usage
 
 **Example**
 
@@ -69,7 +69,7 @@ Web Scraper is a library to build APIs by scraping static sites and use data as 
 
     Think you could be CIO? Jim Barton is a savvy manager but an IT newbie when he's promoted into the hot seat as chief information officer in , a novel by HBS professors  and  and coauthor . Can Barton navigate his strange new world quickly enough? Q&A with the authors, and book excerpt.
 
-### Reference
+## Reference
 
 **WebScraper.all**  
 *Loads html page, detects appropriate blocks,  
