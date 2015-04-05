@@ -12,44 +12,46 @@ Web Scraper is a library to build APIs by scraping static sites and use data as 
 
 **Example**
 
-    require 'web_scraper'
+```ruby
+require 'web_scraper'
 
-    class Article < WebScraper
-      resource 'http://hbswk.hbs.edu/topics/it.html'
+class Article < WebScraper
+  resource 'http://hbswk.hbs.edu/topics/it.html'
 
-      base css: '.tile-medium'
+  base css: '.tile-medium'
 
-      property :title,       xpath: './/h4/a/text()'
-      property :date,        xpath: './/li[1]/text()'
-      property :category,    xpath: './/li[2]/a/text()'
-      property :description, xpath: './/p/text()'
+  property :title,       xpath: './/h4/a/text()'
+  property :date,        xpath: './/li[1]/text()'
+  property :category,    xpath: './/li[2]/a/text()'
+  property :description, xpath: './/p/text()'
 
-      key :title
-    end
+  key :title
+end
 
-    puts "#{Article.count} articles were found"
-    puts
+puts "#{Article.count} articles were found"
+puts
 
-    articles = Article.all
+articles = Article.all
 
-    articles.each do |article|
-      header = article.title
-      puts header
-      puts '=' * header.length
-      puts
+articles.each do |article|
+  header = article.title
+  puts header
+  puts '=' * header.length
+  puts
 
-      subheader = "#{article.date} #{article.category}"
-      puts subheader
-      puts '-' * subheader.length
-      puts
+  subheader = "#{article.date} #{article.category}"
+  puts subheader
+  puts '-' * subheader.length
+  puts
 
-      puts article.description
-      puts
-    end
+  puts article.description
+  puts
+end
 
-    article =  Article.find('Tech Investment the Wise Way')
+article =  Article.find('Tech Investment the Wise Way')
 
-    puts article.description
+puts article.description
+```
 
 **Output**
 
